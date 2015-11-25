@@ -4,7 +4,7 @@ INCAA_KEY=`cat incaa.key`;
 INCAA_PERFIL=`cat incaa.perfil`;
 
 set -x
-cd data && for i in `seq 100000`; do
+cd data && for i in `echo $@ || seq 100000`; do
         curl "https://www.odeon.com.ar/INCAA/prod/$i?perfil=$INCAA_PERFIL" -H 'Pragma: no-cache' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en-US,en;q=0.8' -H "Authorization: Bearer $INCAA_KEY" -H 'Accept: application/json, text/plain, */*' -H 'Referer: https://www.odeon.com.ar/' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36' -H 'Connection: keep-alive' -H 'Cache-Control: no-cache' --compressed | jsonlint > data.json
         if (cat data.json | grep \"tit\") then
            title=`cat data.json | grep \"tit\" | head -1 | cut -d\" -f4`
